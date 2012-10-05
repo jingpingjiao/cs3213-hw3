@@ -25,5 +25,9 @@ public class MyPipe implements Pipe{
 		// TODO Auto-generated method stub
 		messages.add(val);
 	}
+	
+	public boolean empty(){
+		return messages.size() == 0;
+	}
 
 }
