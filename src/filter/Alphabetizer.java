@@ -8,7 +8,7 @@ import msg.Message;
 import pipe.Pipe;
 import util.StringComparator;
 
-public class Alphabetizer extends InputFilter {
+public class Alphabetizer extends Filter {
 	Comparator<String> comparator = new StringComparator();
 
 	PriorityQueue<String> sortedTitles = new PriorityQueue<String>(1,
@@ -32,9 +32,9 @@ public class Alphabetizer extends InputFilter {
 		}
 
 		while (!sortedTitles.isEmpty()) {
-			outPipe.write(new Message(sortedTitles.poll()));
+			sendMessage(new Message(sortedTitles.poll()));
 		}
-		outPipe.write(new msg.EofMessage());
+		sendMessage(new msg.EofMessage());
 	}
 
 }

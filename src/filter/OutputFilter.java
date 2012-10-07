@@ -20,16 +20,16 @@ public class OutputFilter extends Filter {
 				sendMessage(msg);
 				break;
 			}
-			Message outMsg = process(msg);
+			Message outMsg = transform(msg);
 			sendMessage(outMsg);
 		}
 	}
 
-	private void sendMessage(Message outMsg) {
-		outPipe.write(outMsg);
-	}
+//	private void sendMessage(Message outMsg) {
+//		outPipe.write(outMsg);
+//	}
 
-	private Message process(Message msg) {
+	private Message transform(Message msg) {
 		return msg;
 	}
 }

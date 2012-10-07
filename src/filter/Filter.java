@@ -20,7 +20,7 @@ public abstract class Filter implements Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			outPipe.write(val);
+			sendMessage(val);
 		}
 	}
 
@@ -28,5 +28,8 @@ public abstract class Filter implements Runnable {
 		// TODO Auto-generated method stub
 		throw (new Exception("transform has to be overwritten"));
 	}
-
+	
+	protected void sendMessage(Message msg){
+		outPipe.write(msg);
+	}
 }
