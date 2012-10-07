@@ -72,8 +72,8 @@ public class InputHandler implements Runnable {
 	}
 
 	private void readCommandLine() {
-		System.out.println("Please input titles line by line\n");
-		System.out.println("Finish with a empty line\n");
+		System.out.print("Please input titles line by line.");
+		System.out.println(" Finish with a empty line:");
 		String line;
 		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));
