@@ -15,24 +15,31 @@ import pipe.Pipe;
 public class InputHandler implements Runnable{
 	private String filePath;
 	private Pipe outPipe;
-	private InputStreamReader inStream;
+	private Scanner sc;
 
 	public InputHandler(Pipe pipe) {
 		// TODO Auto-generated constructor stub
 //		this constructor is to return an InputHanler which takes input from terminal
+		assert(pipe != null);
 		this.outPipe = pipe;
 		this.filePath = null;
+		this.sc = null;
 	}
 	
 	public InputHandler(Pipe pipe, String filePath) {
 //		This constructs an InputHandler read a file specified by filePath as input
+		assert(pipe != null);
+		assert(filePath != null);
 		this.outPipe = pipe;
 		this.filePath = filePath;
+		this.sc = null;
 	}
 
 	public InputHandler(Pipe pipe, InputStreamReader inStream) {
+		assert(pipe != null);
+		assert(inStream != null);
 		this.outPipe = pipe;
-		this.inStream = inStream;
+		this.sc = new Scanner(inStream);
 	}
 
 	@Override
@@ -41,9 +48,11 @@ public class InputHandler implements Runnable{
 		read();
 	}
 
-	private void read() {
+	private void read(){
 		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(inStream);
+//		Scanner sc = new Scanner(inStream);
+		if (sc == null)
+			throw new NullPointerException();
 		String line;
 		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));

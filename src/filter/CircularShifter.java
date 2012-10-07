@@ -26,25 +26,22 @@ public class CircularShifter extends Filter {
 				else{								
 					mesContent = val.getContent();			
 					assert(mesContent != null);					
-					if (mesContent!=null)
+					if (mesContent!=null){
 						tokens = mesContent.split(DELIMS);
+						Message processedMes = transform();
+						while (processedMes != null){					
+							outPipe.write(processedMes);
+							processedMes = transform();
+						}
+					}
 					else
 						reset();
 				}
-			}
-			try {			
-				Message processedMes = transform();
-				while (processedMes != null){					
-					outPipe.write(processedMes);
-					processedMes = transform();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			}			
 		}
 	}
 
-	Message transform() throws Exception {
+	Message transform()  {
 		
 		if ((mesContent==null)||(nextBeginIndex > tokens.length)||(tokens == null)){
 			
