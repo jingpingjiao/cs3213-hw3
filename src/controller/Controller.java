@@ -84,7 +84,7 @@ public class Controller {
 	private void process(String[] args) {
 		String inputFileName = null;
 		String outputFileName = null;
-		InputStreamReader in;
+
 		// parse parameter
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equalsIgnoreCase("-i")) {
@@ -103,18 +103,20 @@ public class Controller {
 				}
 			}
 		}
-
-		// prepare inputstream
+		
+		// prepare inputsHandler
 		if (inputFileName == null) {
-			in = new InputStreamReader(System.in);
+			InputStreamReader in = new InputStreamReader(System.in);
 		} else {
 			try {
-				in = new InputStreamReader(new FileInputStream(inputFileName));
+				InputStreamReader in = new InputStreamReader(new FileInputStream(inputFileName));
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found");
 				return;
 			}
 		}
+
+		//prepare outputHandler,
 		
 	}
 
