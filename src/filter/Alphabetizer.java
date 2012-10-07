@@ -9,7 +9,7 @@ import util.StringComparator;
 public class Alphabetizer extends InputFilter{
     Comparator<String> comparator = new StringComparator();
 
-	PriorityQueue<String > sortedTitles = new PriorityQueue<String>(0,comparator);
+	PriorityQueue<String > sortedTitles = new PriorityQueue<String>(1,comparator);
 	
 	public Alphabetizer(Pipe inPipe, Pipe outPipe) {
 		super(inPipe, outPipe);		
