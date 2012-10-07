@@ -26,6 +26,7 @@ public class InputHandler implements Runnable {
 		this.outPipe = pipe;
 		this.filePath = null;
 		this.sc = new Scanner(System.in);
+		this.br=null;
 	}
 
 	public InputHandler(Pipe pipe, InputStreamReader inStream) {
@@ -34,6 +35,7 @@ public class InputHandler implements Runnable {
 		assert (inStream != null);
 		this.outPipe = pipe;
 		this.br = new BufferedReader(inStream);
+		this.sc=null;
 	}
 
 	@Deprecated

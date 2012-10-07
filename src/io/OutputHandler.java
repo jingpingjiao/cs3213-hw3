@@ -12,10 +12,12 @@ import pipe.Pipe;
 public class OutputHandler implements Runnable {
 	FileWriter fstream;
 	private Pipe inPipe;
+	private BufferedWriter out;
 
 	public OutputHandler(Pipe pipe, FileWriter fstream) {
 		this.inPipe = pipe;
 		this.fstream = fstream;
+		this.out = new BufferedWriter(fstream);
 	}
 
 	public OutputHandler(Pipe pipe) {
@@ -33,12 +35,17 @@ public class OutputHandler implements Runnable {
 		while (!((MyPipe) inPipe).empty()) {
 			Message msg = inPipe.read();
 			if (msg instanceof EofMessage) {
+				try {
+					if (out != null) {
+						out.close();
+					}
+				} catch (IOException e) {
+				}
 				break;
 			} else {
 				if (fstream != null) {
-					BufferedWriter out = new BufferedWriter(fstream);
 					try {
-						out.write(msg.getContent());
+						out.write(msg.getContent() + "\n");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

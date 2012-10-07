@@ -18,17 +18,29 @@ import java.util.ArrayList;
 import pipe.MyPipe;
 import pipe.Pipe;
 
+/**
+ * Controller class acts as both UI and controller in this small scale program
+ * 
+ * @author JJP
+ * 
+ */
 public class Controller {
 	private BufferedReader br;
 	private ArrayList<Object> runables = new ArrayList<Object>();
 	private InputHandler inHandler;
 	private OutputHandler outHandler;
 
+	/**
+	 * Constructor for Controller
+	 */
 	public Controller() {
 		this.setBr(new BufferedReader(new InputStreamReader(System.in)));
 		initialize();
 	}
 
+	/**
+	 * Initialize pipes and filters
+	 */
 	private void initialize() {
 		Pipe pipe1 = new MyPipe();
 
@@ -56,6 +68,12 @@ public class Controller {
 		this.setOutHandler(outHandler);
 	}
 
+	/**
+	 * Main function
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String args[]) throws IOException {
 		Controller c = new Controller();
 		c.run();
@@ -94,6 +112,9 @@ public class Controller {
 
 	}
 
+	/**
+	 * Welcome routine
+	 */
 	private static void welcome() {
 		String s = "=======================================\n"
 				+ "          WELCOME TO KWIC MINI\n"
@@ -102,11 +123,17 @@ public class Controller {
 
 	}
 
+	/**
+	 * Exit routine
+	 */
 	private void exit() {
 		System.out.println("Exiting from KIWIC MINI...");
 		System.exit(0);
 	}
 
+	/**
+	 * Print help content
+	 */
 	private void help() {
 		String helpMsg = "help : display help content";
 		String exitMsg = "exit : exit from KIWIC MINI";
@@ -117,8 +144,14 @@ public class Controller {
 				+ "\n" + processMsg + "\n";
 		System.out.println(help);
 	}
-
+	
+	/**
+	 * This method process userinput 
+	 * @param input
+	 */
 	private void process(String input) {
+		initialize();
+		//validate user input against regex
 		String regex1 = "process +-[io] +[a-z0-9.-_]* *";
 		String regex2 = "process +-[io] +[a-z0-9.-_]* +-[io] +[a-z0-9.-_]* *";
 		String[] args = input.split(" ");
@@ -152,7 +185,7 @@ public class Controller {
 					try {
 						this.outHandler = new OutputHandler(
 								this.outHandler.getInPipe(), new FileWriter(
-										outputFileName, true));
+										outputFileName));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
