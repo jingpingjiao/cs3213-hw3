@@ -3,6 +3,7 @@ package io;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
+import message.EofMessage;
 import msg.Message;
 
 import pipe.Pipe;
@@ -29,6 +30,7 @@ public class InputHandler implements Runnable {
 		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));
 		}
+		outPipe.write(new EofMessage());
 		sc.close();
 	}
 }

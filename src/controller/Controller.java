@@ -1,6 +1,10 @@
 package controller;
 
+import io.InputHandler;
+
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -78,6 +82,39 @@ public class Controller {
 	}
 
 	private void process(String[] args) {
+		String inputFileName = null;
+		String outputFileName = null;
+		InputStreamReader in;
+		// parse parameter
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equalsIgnoreCase("-i")) {
+				if (args.length < i + 2 || args[i + 1].trim().equals("")) {
+					System.out.println("Invalid input");
+					return;
+				} else {
+					inputFileName = args[i + 1];
+				}
+			} else if (args[i].equalsIgnoreCase("-o")) {
+				if (args.length < i + 2 || args[i + 1].trim().equals("")) {
+					System.out.println("Invalid input");
+					return;
+				} else {
+					outputFileName = args[i + 1];
+				}
+			}
+		}
+
+		// prepare inputstream
+		if (inputFileName == null) {
+			in = new InputStreamReader(System.in);
+		} else {
+			try {
+				in = new InputStreamReader(new FileInputStream(inputFileName));
+			} catch (FileNotFoundException e) {
+				System.out.println("File not found");
+				return;
+			}
+		}
 		
 	}
 
