@@ -21,7 +21,7 @@ public class CircularShifter extends Filter {
 			Message val = inPipe.read();
 			if (val != null) {
 				if (val instanceof EofMessage) {
-					outPipe.write(new msg.EofMessage());
+					sendMessage(new msg.EofMessage());
 					break;
 				} else {
 					mesContent = val.getContent();
@@ -30,7 +30,7 @@ public class CircularShifter extends Filter {
 						tokens = mesContent.split(DELIMS);
 						Message processedMes = transform();
 						while (processedMes != null) {
-							outPipe.write(processedMes);
+							sendMessage(processedMes);
 							processedMes = transform();
 						}
 					} else

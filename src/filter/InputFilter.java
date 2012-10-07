@@ -20,19 +20,19 @@ public class InputFilter extends Filter {
 			if (msg instanceof EofMessage) {
 				sendMessage(msg);
 			} else {
-				Message outMsg = process(msg);
+				Message outMsg = transform(msg);
 				sendMessage(outMsg);
 			}
 		}
 
 	}
 
-	private void sendMessage(Message outMsg) {
-		// TODO Auto-generated method stub
-		outPipe.write(outMsg);
-	}
+//	private void sendMessage(Message outMsg) {
+//		// TODO Auto-generated method stub
+//		outPipe.write(outMsg);
+//	}
 
-	private Message process(Message msg) {
+	private Message transform(Message msg) {
 		// TODO Auto-generated method stub
 		String str = msg.getContent().trim();
 		str = str.replace("\n", "").replace("\r", "");
