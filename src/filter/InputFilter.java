@@ -1,10 +1,11 @@
 package filter;
 
+import msg.EofMessage;
 import msg.Message;
 import pipe.MyPipe;
 import pipe.Pipe;
 
-public class InputFilter extends Filter{
+public class InputFilter extends Filter {
 
 	public InputFilter(Pipe inPipe, Pipe outPipe) {
 		super(inPipe, outPipe);
@@ -14,11 +15,16 @@ public class InputFilter extends Filter{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while(!((MyPipe)inPipe).empty()){
+		while (!((MyPipe) inPipe).empty()) {
 			Message msg = inPipe.read();
-			Message outMsg = process(msg);
-			sendMessage(outMsg);
+			if (msg instanceof EofMessage) {
+				sendMessage(msg);
+			} else {
+				Message outMsg = process(msg);
+				sendMessage(outMsg);
+			}
 		}
+
 	}
 
 	private void sendMessage(Message outMsg) {

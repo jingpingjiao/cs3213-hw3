@@ -3,6 +3,7 @@ package filter;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import msg.EofMessage;
 import msg.Message;
 import pipe.Pipe;
 import util.StringComparator;
@@ -18,26 +19,21 @@ public class Alphabetizer extends InputFilter {
 	}
 
 	public void run() {
-		while (true) {
-			assert (sortedTitles != null);
-			assert (sortedTitles.isEmpty());
+		assert (sortedTitles != null);
+		assert (sortedTitles.isEmpty());
 
-			while (true) {
-				Message val = inPipe.read();
-				// TODO fix this!
+		Message val = inPipe.read();
+		// TODO fix this!
 
-				if (val.getClass() != msg.EofMessage.class) {
-					sortedTitles.add(val.getContent());
-				} else {
-					break;
-				}
-			}
+		if (!(val instanceof EofMessage)) {
+			sortedTitles.add(val.getContent());
+		} else {
 			while (!sortedTitles.isEmpty()) {
 				outPipe.write(new Message(sortedTitles.poll()));
 			}
-
 			outPipe.write(new msg.EofMessage());
-
 		}
+
 	}
+
 }

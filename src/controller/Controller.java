@@ -29,7 +29,8 @@ public class Controller {
 
 	private void initialize() {
 		Pipe pipe1 = new MyPipe();
-		InputHandler inHandler = new InputHandler(pipe1);
+		InputHandler inHandler = new InputHandler(pipe1, new InputStreamReader(
+				System.in));
 		Pipe pipe2 = new MyPipe();
 		InputFilter infilter = new InputFilter(pipe1, pipe2);
 
@@ -87,7 +88,7 @@ public class Controller {
 					this.help();
 				}
 			} catch (IOException e) {
-				System.out.println("Error occurs while reading input");
+				e.printStackTrace();
 			}
 
 		} while (true);

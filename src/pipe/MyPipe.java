@@ -2,22 +2,23 @@ package pipe;
 
 import java.util.ArrayList;
 
+import msg.EofMessage;
 import msg.Message;
 
-public class MyPipe implements Pipe{
+public class MyPipe implements Pipe {
 	private ArrayList<Message> messages;
-	
-	public MyPipe(){
+
+	public MyPipe() {
 		this.messages = new ArrayList<Message>();
 	}
 
 	@Override
-	public Message read(){
+	public Message read() {
 		// TODO Auto-generated method stub
-		if(!messages.isEmpty()){
+		if (!messages.isEmpty()) {
 			return messages.remove(0);
 		}
-		return null;
+		return new EofMessage();
 	}
 
 	@Override
@@ -25,8 +26,8 @@ public class MyPipe implements Pipe{
 		// TODO Auto-generated method stub
 		messages.add(val);
 	}
-	
-	public boolean empty(){
+
+	public boolean empty() {
 		return messages.size() == 0;
 	}
 

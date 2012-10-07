@@ -48,6 +48,7 @@ public class InputHandler implements Runnable{
 		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));
 		}
+		System.out.println("Processing....");
 		outPipe.write(new EofMessage());
 		sc.close();
 	}
