@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
+import msg.EofMessage;
 import msg.Message;
 
 import pipe.Pipe;
@@ -13,6 +15,7 @@ import pipe.Pipe;
 public class InputHandler implements Runnable{
 	private String filePath;
 	private Pipe outPipe;
+	private InputStreamReader inStream;
 
 	public InputHandler(Pipe pipe) {
 		// TODO Auto-generated constructor stub
@@ -27,18 +30,29 @@ public class InputHandler implements Runnable{
 		this.filePath = filePath;
 	}
 
+	public InputHandler(Pipe pipe, InputStreamReader inStream) {
+		this.outPipe = pipe;
+		this.inStream = inStream;
+	}
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		if (filePath != null){
-//			read input from file
-				readingFile();
-		}
-		else{
-			readingCommandLine();
-		}
+		read();
 	}
 
+	private void read() {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(inStream);
+		String line;
+		while (!(line = sc.nextLine()).isEmpty()) {
+			outPipe.write(new Message(line));
+		}
+		outPipe.write(new EofMessage());
+		sc.close();
+	}
+
+	@SuppressWarnings("unused")
 	private void readingCommandLine() {
 		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
@@ -49,6 +63,7 @@ public class InputHandler implements Runnable{
 		sc.close();
 	}
 
+	@SuppressWarnings("unused")
 	private void readingFile() {
 		FileReader fr;
 		try {
