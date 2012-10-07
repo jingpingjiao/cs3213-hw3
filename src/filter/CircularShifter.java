@@ -18,8 +18,7 @@ public class CircularShifter extends Filter {
 		while (true) {
 			Message val = inPipe.read();
 			if (val != null){
-				mesContent = val.getContent();
-				//TODO confirm this
+				mesContent = val.getContent();			
 				assert(mesContent != null);
 				
 				if (mesContent!=null)

@@ -8,7 +8,8 @@ import pipe.Pipe;
 import util.StringComparator;
 public class Alphabetizer extends InputFilter{
     Comparator<String> comparator = new StringComparator();
-	PriorityQueue<String > sortedTitles = new PriorityQueue<String>(0,comparator);
+
+	PriorityQueue<String > sortedTitles = new PriorityQueue<String>(1,comparator);
 	
 	public Alphabetizer(Pipe inPipe, Pipe outPipe) {
 		super(inPipe, outPipe);		
@@ -21,8 +22,8 @@ public class Alphabetizer extends InputFilter{
 			while(true){
 				Message val = inPipe.read();
 				//TODO fix this!
-				boolean isStreamEnded = true;
-				if (!isStreamEnded){
+								
+				if (val.getClass() != message.EofMessage.class ){
 					sortedTitles.add(val.getContent());				
 				}else{
 					break;
