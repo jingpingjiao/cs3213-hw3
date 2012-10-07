@@ -26,7 +26,7 @@ public class InputHandler implements Runnable {
 		this.outPipe = pipe;
 		this.filePath = null;
 		this.sc = new Scanner(System.in);
-		this.br=null;
+		this.br = null;
 	}
 
 	public InputHandler(Pipe pipe, InputStreamReader inStream) {
@@ -35,7 +35,7 @@ public class InputHandler implements Runnable {
 		assert (inStream != null);
 		this.outPipe = pipe;
 		this.br = new BufferedReader(inStream);
-		this.sc=null;
+		this.sc = null;
 	}
 
 	@Deprecated
@@ -72,6 +72,8 @@ public class InputHandler implements Runnable {
 	}
 
 	private void readCommandLine() {
+		System.out.println("Please input titles line by line\n");
+		System.out.println("Finish with a empty line\n");
 		String line;
 		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));

@@ -144,24 +144,27 @@ public class Controller {
 				+ "\n" + processMsg + "\n";
 		System.out.println(help);
 	}
-	
+
 	/**
-	 * This method process userinput 
+	 * This method process userinput
+	 * 
 	 * @param input
 	 */
 	private void process(String input) {
 		initialize();
-		//validate user input against regex
+		// validate user input against regex
 		String regex1 = "process +-[io] +[a-z0-9.-_]* *";
 		String regex2 = "process +-[io] +[a-z0-9.-_]* +-[io] +[a-z0-9.-_]* *";
 		String[] args = input.split(" ");
-		if (args.length == 1) {
+
+		if (args.length == 1) {// if only command is passed
 			startAllThread();
 		} else {
 			if (input.matches(regex1) || input.matches(regex2)) {
 				String inputFileName = null;
 				String outputFileName = null;
 
+				// check for parameters
 				for (int i = 1; i < args.length; i++) {
 					if (args[i].trim().equalsIgnoreCase("-i"))
 						inputFileName = args[i + 1].trim();
@@ -171,6 +174,8 @@ public class Controller {
 
 				if (inputFileName != null) {
 					try {
+						// if user specify input filename, change the
+						// InputHandler
 						this.inHandler = new InputHandler(
 								this.inHandler.getOutPipe(),
 								new InputStreamReader(new FileInputStream(
@@ -183,6 +188,8 @@ public class Controller {
 				}
 				if (outputFileName != null) {
 					try {
+						// if user specify output filename, change the
+						// outputHandler
 						this.outHandler = new OutputHandler(
 								this.outHandler.getInPipe(), new FileWriter(
 										outputFileName));
@@ -199,6 +206,7 @@ public class Controller {
 	}
 
 	private void startAllThread() {
+		// start running all thread
 		this.inHandler.run();
 		for (Object obj : runables) {
 			((Runnable) obj).run();

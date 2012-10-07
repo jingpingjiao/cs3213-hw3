@@ -31,7 +31,6 @@ public class OutputHandler implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		while (!((MyPipe) inPipe).empty()) {
 			Message msg = inPipe.read();
 			if (msg instanceof EofMessage) {
@@ -43,7 +42,8 @@ public class OutputHandler implements Runnable {
 				}
 				break;
 			} else {
-				if (fstream != null) {
+				if (fstream != null) {// if fstream is not specified, output to
+										// stdin.
 					try {
 						out.write(msg.getContent() + "\n");
 					} catch (IOException e) {
