@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sun Oct 07 21:15:48 CST 2012
+onejar.license.required=false
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=5-HW3-Code1KIWIC.jar
+manifest.mergeall=true
+manifest.mainclass=controller.Controller
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=
