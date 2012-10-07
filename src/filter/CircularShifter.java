@@ -1,5 +1,6 @@
 package filter;
 
+import msg.EofMessage;
 import msg.Message;
 import pipe.Pipe;
 public class CircularShifter extends Filter {
@@ -31,7 +32,8 @@ public class CircularShifter extends Filter {
 				while (processedMes != null){					
 					outPipe.write(processedMes);
 					processedMes = transform();
-				}				
+				}
+				outPipe.write(new msg.EofMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

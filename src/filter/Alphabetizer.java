@@ -35,6 +35,9 @@ public class Alphabetizer extends InputFilter {
 			while (!sortedTitles.isEmpty()) {
 				outPipe.write(new Message(sortedTitles.poll()));
 			}
+
+			outPipe.write(new msg.EofMessage());
+
 		}
 	}
 }
