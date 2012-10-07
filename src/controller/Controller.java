@@ -6,6 +6,7 @@ import filter.Filter;
 import filter.InputFilter;
 import filter.OutputFilter;
 import io.InputHandler;
+import io.OutputHandler;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -19,7 +20,7 @@ import pipe.Pipe;
 
 public class Controller {
 	private BufferedReader br;
-	private ArrayList<Filter> filters;
+	private ArrayList<Object> runables = new ArrayList<Object>();
 
 	public Controller() {
 		this.setBr(new BufferedReader(new InputStreamReader(System.in)));
@@ -28,21 +29,27 @@ public class Controller {
 
 	private void initialize() {
 		Pipe pipe1 = new MyPipe();
-		InputHandler inHandler = new InputHandler(pipe1, new InputStreamReader(
-				System.in));
+		InputHandler inHandler = new InputHandler(pipe1);
 		Pipe pipe2 = new MyPipe();
 		InputFilter infilter = new InputFilter(pipe1, pipe2);
 
 		Pipe pipe3 = new MyPipe();
-		CircularShifter cs = new CircularShifter(pipe2, pipe3);
+		CircularShifter circularShifter = new CircularShifter(pipe2, pipe3);
 
 		Pipe pipe4 = new MyPipe();
 		Alphabetizer alphabetizer = new Alphabetizer(pipe3, pipe4);
 
 		Pipe pipe5 = new MyPipe();
 		OutputFilter outfilter = new OutputFilter(pipe4, pipe5);
-		
-		OutputHandler outHandler =new OutPutHandler(pipe5);
+
+		OutputHandler outHandler = new OutputHandler(pipe5);
+
+		this.runables.add(inHandler);
+		this.runables.add(infilter);
+		this.runables.add(circularShifter);
+		this.runables.add(alphabetizer);
+		this.runables.add(outfilter);
+		this.runables.add(outHandler);
 	}
 
 	public static void main(String args[]) {
@@ -112,43 +119,49 @@ public class Controller {
 	}
 
 	private void process(String[] args) {
-		String inputFileName = null;
-		String outputFileName = null;
 
-		// parse parameter
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].equalsIgnoreCase("-i")) {
-				if (args.length < i + 2 || args[i + 1].trim().equals("")) {
-					System.out.println("Invalid input");
-					return;
-				} else {
-					inputFileName = args[i + 1];
-				}
-			} else if (args[i].equalsIgnoreCase("-o")) {
-				if (args.length < i + 2 || args[i + 1].trim().equals("")) {
-					System.out.println("Invalid input");
-					return;
-				} else {
-					outputFileName = args[i + 1];
-				}
-			}
+		// if (args.length == 1) {
+		//
+		// } else {
+		// String inputFileName = null;
+		// String outputFileName = null;
+		//
+		// // parse parameter
+		// for (int i = 0; i < args.length; i++) {
+		// if (args[i].equalsIgnoreCase("-i")) {
+		// if (args.length < i + 2 || args[i + 1].trim().equals("")) {
+		// System.out.println("Invalid input");
+		// return;
+		// } else {
+		// inputFileName = args[i + 1];
+		// }
+		// } else if (args[i].equalsIgnoreCase("-o")) {
+		// if (args.length < i + 2 || args[i + 1].trim().equals("")) {
+		// System.out.println("Invalid input");
+		// return;
+		// } else {
+		// outputFileName = args[i + 1];
+		// }
+		// }
+		// }
+		//
+		// // prepare inputsHandler
+		// if (inputFileName != null) {
+		// try {
+		// InputStreamReader in = new InputStreamReader(
+		// new FileInputStream(inputFileName));
+		// } catch (FileNotFoundException e) {
+		// System.out.println("File not found");
+		// return;
+		// }
+		//
+		// }
+		//
+		// }
+
+		for (Object obj : runables) {
+			((Runnable) obj).run();
 		}
-
-		// prepare inputsHandler
-		if (inputFileName == null) {
-			InputStreamReader in = new InputStreamReader(System.in);
-		} else {
-			try {
-				InputStreamReader in = new InputStreamReader(
-						new FileInputStream(inputFileName));
-			} catch (FileNotFoundException e) {
-				System.out.println("File not found");
-				return;
-			}
-		}
-
-		// prepare outputHandler,
-
 	}
 
 	public BufferedReader getBr() {

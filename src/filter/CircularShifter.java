@@ -1,5 +1,6 @@
 package filter;
 
+import msg.EofMessage;
 import msg.Message;
 import pipe.Pipe;
 public class CircularShifter extends Filter {
@@ -31,7 +32,8 @@ public class CircularShifter extends Filter {
 				while (processedMes != null){					
 					outPipe.write(processedMes);
 					processedMes = transform();
-				}				
+				}
+				outPipe.write(new msg.EofMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -40,9 +42,10 @@ public class CircularShifter extends Filter {
 
 	Message transform() throws Exception {
 		
-		assert(mesContent!=null);
-		assert(nextBeginIndex < tokens.length);		
-		assert(tokens != null);
+		if ((mesContent==null)||(nextBeginIndex > tokens.length)||(tokens == null)){
+			
+			return null;
+		};
 		
 		String strResult = "";			
 		for (int j=nextBeginIndex;j<tokens.length+nextBeginIndex;j++){
