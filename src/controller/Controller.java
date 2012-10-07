@@ -32,8 +32,7 @@ public class Controller {
 	private void initialize() {
 		Pipe pipe1 = new MyPipe();
 
-		InputHandler inHandler = new InputHandler(pipe1, new InputStreamReader(
-				System.in));
+		InputHandler inHandler = new InputHandler(pipe1);
 
 		Pipe pipe2 = new MyPipe();
 		InputFilter infilter = new InputFilter(pipe1, pipe2);
@@ -144,7 +143,8 @@ public class Controller {
 								new InputStreamReader(new FileInputStream(
 										inputFileName)));
 					} catch (FileNotFoundException e) {
-						System.out.println("File '"+inputFileName + "' not found");
+						System.out.println("File '" + inputFileName
+								+ "' not found");
 						return;
 					}
 				}

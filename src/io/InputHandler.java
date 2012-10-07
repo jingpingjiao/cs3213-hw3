@@ -16,6 +16,7 @@ public class InputHandler implements Runnable {
 	private String filePath;
 	private Pipe outPipe;
 	private Scanner sc;
+	private BufferedReader br;
 
 	public InputHandler(Pipe pipe) {
 		// TODO Auto-generated constructor stub
@@ -24,12 +25,20 @@ public class InputHandler implements Runnable {
 		assert (pipe != null);
 		this.outPipe = pipe;
 		this.filePath = null;
-		this.sc = null;
+		this.sc = new Scanner(System.in);
 	}
 
+	public InputHandler(Pipe pipe, InputStreamReader inStream) {
+		// This constructs an InputHandler read a file specified
+		assert (pipe != null);
+		assert (inStream != null);
+		this.outPipe = pipe;
+		this.br = new BufferedReader(inStream);
+	}
+
+	@Deprecated
 	public InputHandler(Pipe pipe, String filePath) {
-		// This constructs an InputHandler read a file specified by filePath as
-		// input
+
 		assert (pipe != null);
 		assert (filePath != null);
 		this.outPipe = pipe;
@@ -37,44 +46,36 @@ public class InputHandler implements Runnable {
 		this.sc = null;
 	}
 
-	public Pipe getOutPipe() {
-		return this.outPipe;
-	}
-
-	public InputHandler(Pipe pipe, InputStreamReader inStream) {
-		assert (pipe != null);
-		assert (inStream != null);
-		this.outPipe = pipe;
-		this.sc = new Scanner(inStream);
-	}
-
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		read();
+		if (this.sc == null) {
+			readFile();
+		} else {
+			readCommandLine();
+		}
 	}
 
-	private void read() {
-		// TODO Auto-generated method stub
-		// Scanner sc = new Scanner(inStream);
-		if (sc == null)
-			throw new NullPointerException();
+	private void readFile() {
+		String currentLine;
+		try {
+			while ((currentLine = br.readLine()) != null) {
+				outPipe.write(new Message(currentLine));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Processing....\n");
+		outPipe.write(new EofMessage());
+	}
+
+	private void readCommandLine() {
 		String line;
 		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));
 		}
 		System.out.println("Processing....\n");
 		outPipe.write(new EofMessage());
-	}
-
-	@SuppressWarnings("unused")
-	private void readingCommandLine() {
-		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(System.in);
-		String line;
-		while (!(line = sc.nextLine()).isEmpty()) {
-			outPipe.write(new Message(line));
-		}
 	}
 
 	@SuppressWarnings("unused")
@@ -97,4 +98,7 @@ public class InputHandler implements Runnable {
 		}
 	}
 
+	public Pipe getOutPipe() {
+		return this.outPipe;
+	}
 }
