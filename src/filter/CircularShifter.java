@@ -19,28 +19,29 @@ public class CircularShifter extends Filter {
 		while (true) {
 			Message val = inPipe.read();
 			if (val != null){
-				mesContent = val.getContent();			
-				assert(mesContent != null);
-				
-				if (mesContent!=null)
-					tokens = mesContent.split(DELIMS);
-				else
-					reset();
-			}				
-			try {			
-				Message processedMes = transform();
-				while (processedMes != null){					
-					outPipe.write(processedMes);
-					processedMes = transform();
+				if(val.getClass() == msg.EofMessage.class){
+					outPipe.write(new msg.EofMessage());
+					return;
 				}
-				outPipe.write(new msg.EofMessage());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				else{								
+					mesContent = val.getContent();			
+					assert(mesContent != null);					
+					if (mesContent!=null){
+						tokens = mesContent.split(DELIMS);
+						Message processedMes = transform();
+						while (processedMes != null){					
+							outPipe.write(processedMes);
+							processedMes = transform();
+						}
+					}
+					else
+						reset();
+				}
+			}			
 		}
 	}
 
-	Message transform() throws Exception {
+	Message transform()  {
 		
 		if ((mesContent==null)||(nextBeginIndex > tokens.length)||(tokens == null)){
 			
