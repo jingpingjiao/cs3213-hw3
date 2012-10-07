@@ -1,12 +1,14 @@
 package filter;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import msg.Message;
 import pipe.Pipe;
-
+import util.StringComparator;
 public class Alphabetizer extends InputFilter{
-	PriorityQueue<String > sortedTitles = new PriorityQueue<String>();
+    Comparator<String> comparator = new StringComparator();
+	PriorityQueue<String > sortedTitles = new PriorityQueue<String>(0,comparator);
 	
 	public Alphabetizer(Pipe inPipe, Pipe outPipe) {
 		super(inPipe, outPipe);		
