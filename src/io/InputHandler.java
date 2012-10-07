@@ -17,6 +17,10 @@ public class InputHandler implements Runnable {
 		this.inStream = inStream;
 	}
 
+	public Pipe getOutPipe() {
+		return this.outPipe;
+	}
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -32,5 +36,9 @@ public class InputHandler implements Runnable {
 		}
 		outPipe.write(new EofMessage());
 		sc.close();
+	}
+
+	public void setInputStreamReader(InputStreamReader inStream) {
+		this.inStream = inStream;
 	}
 }
