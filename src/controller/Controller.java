@@ -121,44 +121,45 @@ public class Controller {
 
 	private void process(String[] args) {
 
-		// if (args.length == 1) {
-		//
-		// } else {
-		// String inputFileName = null;
-		// String outputFileName = null;
-		// // parse parameter
-		// for (int i = 0; i < args.length; i++) {
-		// if (args[i].equalsIgnoreCase("-i")) {
-		// if (args.length < i + 2 || args[i + 1].trim().equals("")) {
-		// System.out.println("Invalid input");
-		// return;
-		// } else {
-		// inputFileName = args[i + 1];
-		// }
-		// } else if (args[i].equalsIgnoreCase("-o")) {
-		// if (args.length < i + 2 || args[i + 1].trim().equals("")) {
-		// System.out.println("Invalid input");
-		// return;
-		// } else {
-		// outputFileName = args[i + 1];
-		// }
-		// }
-		// }
-		//
-		// // prepare inputsHandler
-		// if (inputFileName == null) {
-		// InputStreamReader in = new InputStreamReader(System.in);
-		// } else {
-		// try {
-		// InputStreamReader in = new InputStreamReader(
-		// new FileInputStream(inputFileName));
-		// } catch (FileNotFoundException e) {
-		// System.out.println("File not found");
-		// return;
-		// }
-		// }
-		//
-		// }
+		if (args.length == 1) {
+
+		} else {
+			String inputFileName = null;
+			String outputFileName = null;
+
+			// parse parameter
+			for (int i = 0; i < args.length; i++) {
+				if (args[i].equalsIgnoreCase("-i")) {
+					if (args.length < i + 2 || args[i + 1].trim().equals("")) {
+						System.out.println("Invalid input");
+						return;
+					} else {
+						inputFileName = args[i + 1];
+					}
+				} else if (args[i].equalsIgnoreCase("-o")) {
+					if (args.length < i + 2 || args[i + 1].trim().equals("")) {
+						System.out.println("Invalid input");
+						return;
+					} else {
+						outputFileName = args[i + 1];
+					}
+				}
+			}
+
+			// prepare inputsHandler
+			if (inputFileName != null) {
+				try {
+					InputStreamReader in = new InputStreamReader(
+							new FileInputStream(inputFileName));
+				} catch (FileNotFoundException e) {
+					System.out.println("File not found");
+					return;
+				}
+				
+			}
+
+		}
+
 		for (Object obj : runables) {
 			((Runnable) obj).run();
 		}
