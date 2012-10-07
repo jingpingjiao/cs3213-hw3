@@ -3,7 +3,7 @@ package io;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import message.EofMessage;
+import msg.EofMessage;
 import msg.Message;
 
 import pipe.Pipe;

@@ -1,5 +1,10 @@
 package controller;
 
+import filter.Alphabetizer;
+import filter.CircularShifter;
+import filter.Filter;
+import filter.InputFilter;
+import filter.OutputFilter;
 import io.InputHandler;
 
 import java.io.BufferedReader;
@@ -7,12 +12,37 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import pipe.MyPipe;
+import pipe.Pipe;
 
 public class Controller {
 	private BufferedReader br;
+	private ArrayList<Filter> filters;
 
 	public Controller() {
 		this.setBr(new BufferedReader(new InputStreamReader(System.in)));
+		initialize();
+	}
+
+	private void initialize() {
+		Pipe pipe1 = new MyPipe();
+		InputHandler inHandler = new InputHandler(pipe1, new InputStreamReader(
+				System.in));
+		Pipe pipe2 = new MyPipe();
+		InputFilter infilter = new InputFilter(pipe1, pipe2);
+
+		Pipe pipe3 = new MyPipe();
+		CircularShifter cs = new CircularShifter(pipe2, pipe3);
+
+		Pipe pipe4 = new MyPipe();
+		Alphabetizer alphabetizer = new Alphabetizer(pipe3, pipe4);
+
+		Pipe pipe5 = new MyPipe();
+		OutputFilter outfilter = new OutputFilter(pipe4, pipe5);
+		
+		OutputHandler outHandler =new OutPutHandler(pipe5);
 	}
 
 	public static void main(String args[]) {
@@ -103,21 +133,22 @@ public class Controller {
 				}
 			}
 		}
-		
+
 		// prepare inputsHandler
 		if (inputFileName == null) {
 			InputStreamReader in = new InputStreamReader(System.in);
 		} else {
 			try {
-				InputStreamReader in = new InputStreamReader(new FileInputStream(inputFileName));
+				InputStreamReader in = new InputStreamReader(
+						new FileInputStream(inputFileName));
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found");
 				return;
 			}
 		}
 
-		//prepare outputHandler,
-		
+		// prepare outputHandler,
+
 	}
 
 	public BufferedReader getBr() {
