@@ -21,19 +21,20 @@ public class Alphabetizer extends InputFilter {
 	public void run() {
 		assert (sortedTitles != null);
 		assert (sortedTitles.isEmpty());
-
-		Message val = inPipe.read();
-		// TODO fix this!
-
-		if (!(val instanceof EofMessage)) {
-			sortedTitles.add(val.getContent());
-		} else {
-			while (!sortedTitles.isEmpty()) {
-				outPipe.write(new Message(sortedTitles.poll()));
+		while (true) {
+			Message val = inPipe.read();
+			// TODO fix this!
+			if (!(val instanceof EofMessage)) {
+				sortedTitles.add(val.getContent());
+			} else {
+				break;
 			}
-			outPipe.write(new msg.EofMessage());
 		}
 
+		while (!sortedTitles.isEmpty()) {
+			outPipe.write(new Message(sortedTitles.poll()));
+		}
+		outPipe.write(new msg.EofMessage());
 	}
 
 }

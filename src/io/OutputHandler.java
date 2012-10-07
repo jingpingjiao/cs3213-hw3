@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import msg.EofMessage;
 import msg.Message;
 import pipe.MyPipe;
 import pipe.Pipe;
@@ -22,21 +23,28 @@ public class OutputHandler implements Runnable {
 		this.fstream = null;
 	}
 
+	public Pipe getInPipe() {
+		return this.inPipe;
+	}
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		while (!((MyPipe) inPipe).empty()) {
 			Message msg = inPipe.read();
-			if (fstream != null) {
-				BufferedWriter out = new BufferedWriter(fstream);
-				try {
-					out.write(msg.getContent());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			if (msg instanceof EofMessage) {
+				break;
 			} else {
-				System.out.println(msg.getContent());
+				if (fstream != null) {
+					BufferedWriter out = new BufferedWriter(fstream);
+					try {
+						out.write(msg.getContent());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					System.out.println(msg.getContent());
+				}
 			}
 		}
 

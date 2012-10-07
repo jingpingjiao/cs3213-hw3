@@ -2,7 +2,6 @@ package controller;
 
 import filter.Alphabetizer;
 import filter.CircularShifter;
-import filter.Filter;
 import filter.InputFilter;
 import filter.OutputFilter;
 import io.InputHandler;
@@ -11,6 +10,7 @@ import io.OutputHandler;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -21,6 +21,8 @@ import pipe.Pipe;
 public class Controller {
 	private BufferedReader br;
 	private ArrayList<Object> runables = new ArrayList<Object>();
+	private InputHandler inHandler;
+	private OutputHandler outHandler;
 
 	public Controller() {
 		this.setBr(new BufferedReader(new InputStreamReader(System.in)));
@@ -30,7 +32,8 @@ public class Controller {
 	private void initialize() {
 		Pipe pipe1 = new MyPipe();
 
-		InputHandler inHandler = new InputHandler(pipe1,new InputStreamReader(System.in));
+		InputHandler inHandler = new InputHandler(pipe1, new InputStreamReader(
+				System.in));
 
 		Pipe pipe2 = new MyPipe();
 		InputFilter infilter = new InputFilter(pipe1, pipe2);
@@ -46,20 +49,20 @@ public class Controller {
 
 		OutputHandler outHandler = new OutputHandler(pipe5);
 
-		this.runables.add(inHandler);
+		this.setInHandler(inHandler);
 		this.runables.add(infilter);
 		this.runables.add(circularShifter);
 		this.runables.add(alphabetizer);
 		this.runables.add(outfilter);
-		this.runables.add(outHandler);
+		this.setOutHandler(outHandler);
 	}
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
 		Controller c = new Controller();
 		c.run();
 	}
 
-	private void run() {
+	private void run() throws IOException {
 		// default input
 		String input = "exit";
 		String[] args;
@@ -70,26 +73,22 @@ public class Controller {
 
 		// read input and process
 		do {
-			try {
-				System.out.print(">");
-				input = br.readLine().trim();
-				args = input.split(" ");
-				if (args.length < 1) {
-					continue;
-				}
+			System.out.print(">");
+			input = br.readLine().trim();
+			args = input.split(" ");
+			if (args.length < 1) {
+				continue;
+			}
 
-				String command = args[0];
-				if (command.equalsIgnoreCase("exit")) {
-					this.exit();
-				} else if (command.equalsIgnoreCase("help")) {
-					this.help();
-				} else if (command.equalsIgnoreCase("process")) {
-					this.process(args);
-				} else {
-					this.help();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			String command = args[0];
+			if (command.equalsIgnoreCase("exit")) {
+				this.exit();
+			} else if (command.equalsIgnoreCase("help")) {
+				this.help();
+			} else if (command.equalsIgnoreCase("process")) {
+				this.process(input);
+			} else {
+				this.help();
 			}
 
 		} while (true);
@@ -120,50 +119,58 @@ public class Controller {
 		System.out.println(help);
 	}
 
-	private void process(String[] args) {
+	private void process(String input) {
+		String regex1 = "process +-[io] +[a-z0-9.-_]* *";
+		String regex2 = "process +-[io] +[a-z0-9.-_]* +-[io] +[a-z0-9.-_]* *";
+		String[] args = input.split(" ");
+		if (args.length == 1) {
+			startAllThread();
+		} else {
+			if (input.matches(regex1) || input.matches(regex2)) {
+				String inputFileName = null;
+				String outputFileName = null;
 
-		// if (args.length == 1) {
-		//
-		// } else {
-		// String inputFileName = null;
-		// String outputFileName = null;
-		//
-		// // parse parameter
-		// for (int i = 0; i < args.length; i++) {
-		// if (args[i].equalsIgnoreCase("-i")) {
-		// if (args.length < i + 2 || args[i + 1].trim().equals("")) {
-		// System.out.println("Invalid input");
-		// return;
-		// } else {
-		// inputFileName = args[i + 1];
-		// }
-		// } else if (args[i].equalsIgnoreCase("-o")) {
-		// if (args.length < i + 2 || args[i + 1].trim().equals("")) {
-		// System.out.println("Invalid input");
-		// return;
-		// } else {
-		// outputFileName = args[i + 1];
-		// }
-		// }
-		// }
-		//
-		// // prepare inputsHandler
-		// if (inputFileName != null) {
-		// try {
-		// InputStreamReader in = new InputStreamReader(
-		// new FileInputStream(inputFileName));
-		// } catch (FileNotFoundException e) {
-		// System.out.println("File not found");
-		// return;
-		// }
-		//
-		// }
-		//
-		// }
+				for (int i = 1; i < args.length; i++) {
+					if (args[i].trim().equalsIgnoreCase("-i"))
+						inputFileName = args[i + 1].trim();
+					if (args[i].trim().equalsIgnoreCase("-o"))
+						outputFileName = args[i + 1].trim();
+				}
 
+				if (inputFileName != null) {
+					try {
+						this.inHandler = new InputHandler(
+								this.inHandler.getOutPipe(),
+								new InputStreamReader(new FileInputStream(
+										inputFileName)));
+					} catch (FileNotFoundException e) {
+						System.out.println("File '"+inputFileName + "' not found");
+						return;
+					}
+				}
+				if (outputFileName != null) {
+					try {
+						this.outHandler = new OutputHandler(
+								this.outHandler.getInPipe(), new FileWriter(
+										outputFileName, true));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				startAllThread();
+			} else {
+				System.out.println("Please check you input");
+			}
+		}
+
+	}
+
+	private void startAllThread() {
+		this.inHandler.run();
 		for (Object obj : runables) {
 			((Runnable) obj).run();
 		}
+		this.outHandler.run();
 	}
 
 	public BufferedReader getBr() {
@@ -172,5 +179,21 @@ public class Controller {
 
 	public void setBr(BufferedReader br) {
 		this.br = br;
+	}
+
+	public InputHandler getInHandler() {
+		return inHandler;
+	}
+
+	public void setInHandler(InputHandler inHandler) {
+		this.inHandler = inHandler;
+	}
+
+	public OutputHandler getOutHandler() {
+		return outHandler;
+	}
+
+	public void setOutHandler(OutputHandler outHandler) {
+		this.outHandler = outHandler;
 	}
 }

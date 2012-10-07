@@ -1,5 +1,6 @@
 package filter;
 
+import msg.EofMessage;
 import msg.Message;
 import pipe.MyPipe;
 import pipe.Pipe;
@@ -15,6 +16,10 @@ public class OutputFilter extends Filter {
 	public void run() {
 		while (!((MyPipe) inPipe).empty()) {
 			Message msg = inPipe.read();
+			if (msg instanceof EofMessage) {
+				sendMessage(msg);
+				break;
+			}
 			Message outMsg = process(msg);
 			sendMessage(outMsg);
 		}

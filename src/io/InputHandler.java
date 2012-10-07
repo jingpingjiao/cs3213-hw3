@@ -12,32 +12,38 @@ import msg.Message;
 
 import pipe.Pipe;
 
-public class InputHandler implements Runnable{
+public class InputHandler implements Runnable {
 	private String filePath;
 	private Pipe outPipe;
 	private Scanner sc;
 
 	public InputHandler(Pipe pipe) {
 		// TODO Auto-generated constructor stub
-//		this constructor is to return an InputHanler which takes input from terminal
-		assert(pipe != null);
+		// this constructor is to return an InputHanler which takes input from
+		// terminal
+		assert (pipe != null);
 		this.outPipe = pipe;
 		this.filePath = null;
 		this.sc = null;
 	}
-	
+
 	public InputHandler(Pipe pipe, String filePath) {
-//		This constructs an InputHandler read a file specified by filePath as input
-		assert(pipe != null);
-		assert(filePath != null);
+		// This constructs an InputHandler read a file specified by filePath as
+		// input
+		assert (pipe != null);
+		assert (filePath != null);
 		this.outPipe = pipe;
 		this.filePath = filePath;
 		this.sc = null;
 	}
 
+	public Pipe getOutPipe() {
+		return this.outPipe;
+	}
+
 	public InputHandler(Pipe pipe, InputStreamReader inStream) {
-		assert(pipe != null);
-		assert(inStream != null);
+		assert (pipe != null);
+		assert (inStream != null);
 		this.outPipe = pipe;
 		this.sc = new Scanner(inStream);
 	}
@@ -48,18 +54,17 @@ public class InputHandler implements Runnable{
 		read();
 	}
 
-	private void read(){
+	private void read() {
 		// TODO Auto-generated method stub
-//		Scanner sc = new Scanner(inStream);
+		// Scanner sc = new Scanner(inStream);
 		if (sc == null)
 			throw new NullPointerException();
 		String line;
 		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));
 		}
-		System.out.println("Processing....");
+		System.out.println("Processing....\n");
 		outPipe.write(new EofMessage());
-		sc.close();
 	}
 
 	@SuppressWarnings("unused")
@@ -67,10 +72,9 @@ public class InputHandler implements Runnable{
 		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
 		String line;
-		while(!(line=sc.nextLine()).isEmpty()){
+		while (!(line = sc.nextLine()).isEmpty()) {
 			outPipe.write(new Message(line));
 		}
-		sc.close();
 	}
 
 	@SuppressWarnings("unused")
@@ -80,7 +84,7 @@ public class InputHandler implements Runnable{
 			fr = new FileReader(this.filePath);
 			BufferedReader br = new BufferedReader(fr);
 			String currentLine;
-			while ((currentLine = br.readLine()) != null){
+			while ((currentLine = br.readLine()) != null) {
 				outPipe.write(new Message(currentLine));
 			}
 			fr.close();
