@@ -40,9 +40,10 @@ public class CircularShifter extends Filter {
 
 	Message transform() throws Exception {
 		
-		assert(mesContent!=null);
-		assert(nextBeginIndex < tokens.length);		
-		assert(tokens != null);
+		if ((mesContent==null)||(nextBeginIndex > tokens.length)||(tokens == null)){
+			
+			return null;
+		};
 		
 		String strResult = "";			
 		for (int j=nextBeginIndex;j<tokens.length+nextBeginIndex;j++){
